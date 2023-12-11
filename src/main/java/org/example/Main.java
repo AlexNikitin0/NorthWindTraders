@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/northwind";
         String user = user = "root";
-        String password = "1234"; // not my real password
+        String password = "17b*98An"; // not my real password
         String query = "SELECT * FROM Products";
         try{
             //establish connection
@@ -17,8 +17,11 @@ public class Main {
             ResultSet rs = stmt.executeQuery(query);
             //process the result set
             while(rs.next()){
-                //input column name or index
-                System.out.println(rs.getString(2));
+                //input column name or index to get output
+                System.out.println("ProductID: " + (rs.getString("ProductID")));
+                System.out.println("Name: " + (rs.getString("ProductName")));
+                System.out.println("Stock: " + (rs.getString("UnitsInStock")));
+                System.out.println("----------------------");
             }
             //closing resources
             rs.close();
