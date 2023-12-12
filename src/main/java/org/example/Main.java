@@ -1,16 +1,15 @@
 package org.example;
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.*;
 import javax.sql.DataSource;
 import java.util.Scanner;
-
-
 public class Main {
     public static Scanner keyboard = new Scanner(System.in);
     public static String url = "jdbc:mysql://localhost:3306/northwind";
     public static String user = user = "root";
     public static String password = "123"; // not my real password
     public static PreparedStatement preparedStatement = null;
-
     public static void main(String[] args) {
         int userChoice;
         int id;
@@ -25,14 +24,20 @@ public class Main {
         Statement stmt = null;
         ResultSet rs = null;
         ResultSet rs1 = null;
+        BasicDataSource dataSource = new BasicDataSource();
         if (userChoice == 1) {
-            String query = "SELECT * FROM Products";
+            String query = "";
             try {
-                //establish connection
-                conn = DriverManager.getConnection(url, user, password);
-                stmt = conn.createStatement();
+                //establish connection using datasource
+
+                dataSource.setUrl(url);
+                dataSource.setUsername(user);
+                dataSource.setPassword(password);
+                Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM Products");
+
                 //execute query
-                rs = stmt.executeQuery(query);
+                rs = statement.executeQuery();
                 //process the result set
                 while (rs.next()) {
                     //input column name or index to get output
@@ -41,7 +46,6 @@ public class Main {
                     System.out.println("Stock: " + (rs.getString("UnitsInStock")));
                     System.out.println("----------------------");
                 }
-
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
@@ -68,7 +72,6 @@ public class Main {
                     }
                 }
             }
-
         } else if (userChoice == 2) {
             String query = "SELECT * FROM Customers";
             try {
@@ -86,8 +89,6 @@ public class Main {
                     System.out.println("Phone: " + (rs.getString("Phone")));
                     System.out.println("----------------------");
                 }
-
-
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
@@ -114,16 +115,13 @@ public class Main {
                     }
                 }
             }
-
         } else if (userChoice == 3) {
-
             String query = "SELECT * FROM Categories ORDER BY CategoryID";
             try (Connection connection = DriverManager.getConnection(url, user, password);
                  PreparedStatement stmt1 = connection.prepareStatement(query);
                  //execute query
                  ResultSet rs2 = stmt1.executeQuery();) {
                 //establish connection
-
                 //process the result set
                 while (rs2.next()) {
                     //input column name or index to get output
@@ -144,19 +142,12 @@ public class Main {
                     System.out.println("ProductName " + rs3.getString("ProductName"));
                     System.out.println("UnitPrice " + rs3.getString("UnitPrice"));
                     System.out.println("UnitsInStock " + rs3.getString("UnitsInStock"));
-                    System.out.println("""
-                        ----------------------------------
-                        """);
-
+                    System.out.println("----------------------");
                 }
-
                 }catch(SQLException e){
                 e.printStackTrace();
-
             }
-
         }
-
     }
 }
 
