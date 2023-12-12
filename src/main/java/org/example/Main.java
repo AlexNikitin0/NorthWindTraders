@@ -73,7 +73,7 @@ public class Main {
 
             String url = "jdbc:mysql://localhost:3306/northwind";
             String user = user = "root";
-            String password = "17b*98An"; // not my real password
+            String password = ""; // not my real password
             String query = "SELECT * FROM Customers";
             try {
                 //establish connection
